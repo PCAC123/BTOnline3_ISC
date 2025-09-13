@@ -1,0 +1,33 @@
+name: Build and Deploy .NET API to Azure
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore
+      run: dotnet restore BTOnline_3/BTOnline_3.sln
+
+    - name: Build
+      run: dotnet build BTOnline_3/BTOnline_3.sln --configuration Release --no-restore
+
+    - name: Publish
+      run: dotnet publish BTOnline_3/BTOnline_3/BTOnline_3.csproj -c Release -o ./publish
+
+    - name: Deploy to Azure
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: "your-app-service-name"   # tên App Service trong Azure
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ./publish
