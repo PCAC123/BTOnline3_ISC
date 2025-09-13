@@ -1,4 +1,4 @@
-name: .NET Build
+name: Build .NET API
 
 on:
   push:
@@ -11,16 +11,19 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 6.0.x
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore BTOnline3_ISC.sln
+    - name: Restore dependencies
+      run: dotnet restore BTOnline_3/BTOnline_3.sln
 
-      - name: Build
-        run: dotnet build BTOnline3_ISC.sln --configuration Release --no-restore
+    - name: Build
+      run: dotnet build BTOnline_3/BTOnline_3.sln --configuration Release --no-restore
+
+    - name: Publish
+      run: dotnet publish BTOnline_3/BTOnline_3.sln -c Release -o ./publish
